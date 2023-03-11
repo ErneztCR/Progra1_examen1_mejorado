@@ -21,6 +21,7 @@ public class ErnestoVargasExamen1 {
         Scanner scanner = new Scanner(System.in);
         int opcion = 0;
         while (opcion != 4) {
+            System.out.println("\n==== Programa de ventas de entradas ====\n");
             System.out.println("1. Ingresar datos de venta");
             System.out.println("2. Inicializar arreglo");
             System.out.println("3. Estadísticas");
@@ -56,66 +57,71 @@ public class ErnestoVargasExamen1 {
         Scanner scanner = new Scanner(System.in);
         boolean ventaValida = false;
         while (!ventaValida) {
-            System.out.print("Ingrese número de factura: ");
+            System.out.print("\nIngrese número de factura: ");
             int numFactura = scanner.nextInt();
             scanner.nextLine(); // consumir la nueva línea pendiente
             if (numFactura < 1 || numFactura > TAM_VECTOR) {
-                System.out.println("Número de factura inválido. Debe ser entre 1 y " + TAM_VECTOR + ".");
+                System.out.println("ERROR: Número de factura inválido. Debe ser entre 1 y " + TAM_VECTOR + ".");
                 continue;
             }
-            System.out.print("Ingrese cédula: ");
+            System.out.print("\nIngrese cédula: ");
             String cedula = scanner.nextLine();
-            System.out.print("Ingrese nombre del comprador: ");
+            System.out.print("\nIngrese nombre del comprador: ");
             String nombre = scanner.nextLine();
-            System.out.println("Ingrese localidad:");
+            System.out.println("\nIngrese localidad:");
             System.out.println("1. Sol Norte/Sur");
             System.out.println("2. Sombra Este/Oeste");
             System.out.println("3. Preferencial");
             int localidad = scanner.nextInt();
-            System.out.print("Ingrese cantidad de entradas: ");
+            System.out.print("\nIngrese cantidad de entradas: ");
             int cantEntradas = scanner.nextInt();
             scanner.nextLine(); // consumir la nueva línea pendiente
-
+    
+            double precioEntrada = 0; // Inicializar precioEntrada con un valor predeterminado
+    
             if (cantEntradas <= 4) {
-                double precioEntrada;
+                double subtotal;
+                double cargosServicios = cantEntradas * 1000; // calcular cargos de servicio
                 String nombreLocalidad;
+    
                 switch (localidad) {
                     case 1:
                         precioEntrada = 10500;
                         nombreLocalidad = "Sol Norte/Sur";
+                        subtotal = cantEntradas * precioEntrada; // calcular subtotal
                         entradasSolNorteSur[numFactura - 1] += cantEntradas;
-                        acumuladoSolNorteSur += cantEntradas * precioEntrada;
+                        acumuladoSolNorteSur += subtotal + cargosServicios; // agregar subtotal con cargos por servicio al acumulado
                         break;
                     case 2:
                         precioEntrada = 20500;
                         nombreLocalidad = "Sombra Este/Oeste";
+                        subtotal = cantEntradas * precioEntrada; // calcular subtotal
                         entradasSombraEsteOeste[numFactura - 1] += cantEntradas;
-                        acumuladoSombraEsteOeste += cantEntradas * precioEntrada;
+                        acumuladoSombraEsteOeste += subtotal + cargosServicios; // agregar subtotal con cargos por servicio al acumulado
                         break;
                     case 3:
                         precioEntrada = 25500;
                         nombreLocalidad = "Preferencial";
+                        subtotal = cantEntradas * precioEntrada; // calcular subtotal
                         entradasPreferencial[numFactura - 1] += cantEntradas;
-                        acumuladoPreferencial += cantEntradas * precioEntrada;
+                        acumuladoPreferencial += subtotal + cargosServicios; // agregar subtotal con cargos por servicio al acumulado
                         break;
                     default:
-                        System.out.println("Localidad inválida.");
+                        System.out.println("\nERROR: Localidad inválida.\n");
                         return;
                 }
-                double subtotal = cantEntradas * precioEntrada;
-                double cargosServicios = cantEntradas * 1000;
-                double total = subtotal + cargosServicios;
-                System.out.println("Número de factura: " + numFactura);
-                System.out.println("Cédula: " + cedula);
-                System.out.println("Nombre del comprador: " + nombre);
-                System.out.println("Localidad: " + nombreLocalidad);
-                System.out.println("Cantidad de entradas: " + cantEntradas);
-                System.out.println("Subtotal: " + subtotal);
-                System.out.println("Cargos por servicios: " + cargosServicios);
-                System.out.println("Total a pagar: " + total);
+
+                double total = subtotal + (cantEntradas * 1000);
+                System.out.println(" ");
+                System.out.println(String.format("%75s", "Info. de Factura"));
+                System.out.println("=====================================================================================================================================");
+                System.out.println(String.format("%-16s %-16s %-16s %-16s %-16s %-16s %-16s %-16s", "N. Factura", "Cedula", "Comprador", "Localidad", "Cantidad", "Subtotal", "Cargos", "Total a pagar"));
+                System.out.println("-------------------------------------------------------------------------------------------------------------------------------------");
+                System.out.println(String.format("%-16s %-16s %-16s %-19s %-12s %-16s %-19s %-20s", numFactura, cedula, nombre, nombreLocalidad, cantEntradas, "¢" + subtotal, "¢" + cargosServicios, "¢" + total));
+                System.out.println("=====================================================================================================================================\n");
                 ventaValida = true;
             } else {
-                System.out.println("No se pueden comprar más de 4 entradas.");
+                System.out.println("\nERROR:  No se pueden comprar más de 4 entradas.\n");
             }
         }
     }
@@ -127,16 +133,38 @@ public class ErnestoVargasExamen1 {
         acumuladoSolNorteSur = 0;
         acumuladoSombraEsteOeste = 0;
         acumuladoPreferencial = 0;
-        System.out.println("Arreglo inicializado.");
+        System.out.println("\nArreglo inicializado.\n");
     }
 
     public static void mostrarEstadisticas() {
-        System.out.println("Cantidad Entradas Localidad Sol Norte/Sur: " + sumarEntradas(entradasSolNorteSur));
-        System.out.println("Acumulado Dinero Localidad Sol Norte/Sur: " + acumuladoSolNorteSur);
-        System.out.println("Cantidad Entradas Localidad Sombra Este/Oeste: " + sumarEntradas(entradasSombraEsteOeste));
-        System.out.println("Acumulado Dinero Localidad Sombra Este/Oeste: " + acumuladoSombraEsteOeste);
-        System.out.println("Cantidad Entradas Localidad Preferencial: " + sumarEntradas(entradasPreferencial));
-        System.out.println("Acumulado Dinero Localidad Preferencial: " + acumuladoPreferencial);
+
+        double totalventasConCargos = acumuladoSolNorteSur + acumuladoSombraEsteOeste + acumuladoPreferencial;
+
+        System.out.println(" ");
+        System.out.println(String.format("%40s", "Estadisticas de Ventas")); // este formato "%50s" sirve para
+        // rellenar espacios,
+        System.out.println( // en este caso se especifica la longitud total de la cadena de texto 50
+                            // caracteres.
+                "=======================================================");
+        System.out.println(String.format("\033[1m%-20s %-20s %-20s", "Tipo de entrada", "Entradas Vendidas",
+                "Total Ganado\033[0m"));
+        System.out.println(
+                "-------------------------------------------------------");
+        System.out.println(String.format("%-28s %-16s %-20s", "Sol Norte/Sur", sumarEntradas(entradasSolNorteSur), "¢" +
+                acumuladoSolNorteSur));
+        System.out.println(
+                "-------------------------------------------------------");
+        System.out.println(String.format("%-28s %-16s %-20s", "Sombra Este/Oeste",
+                sumarEntradas(entradasSombraEsteOeste), "¢" + acumuladoSombraEsteOeste));
+        System.out.println(
+                "-------------------------------------------------------");
+        System.out.println(String.format("%-28s %-16s %-20s", "Preferencial", sumarEntradas(entradasPreferencial), "¢" +
+                acumuladoPreferencial));
+        System.out.println(
+                "=======================================================");
+        System.out.println(String.format("\033[1m%-44s %-13s", "TOTAL VENTAS", "¢" + totalventasConCargos + "\033[0m"));
+        System.out.println(
+                "                                            ---------- ");
     }
 
     public static int sumarEntradas(int[] arreglo) {
